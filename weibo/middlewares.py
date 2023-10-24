@@ -38,7 +38,7 @@ class CookiesMiddleware(object):
     def __init__(self):
         import os
         current_path = os.getcwd()
-        with open(current_path + '\cookie.txt', 'rt', encoding='utf-8') as f:
+        with open(current_path+'/weibo/cookie.txt', 'rt', encoding='utf-8') as f:
             COOKIE = f.readlines()
             print(COOKIE, '-------------')
         self.COOKIE_LIST = [d.strip() for d in COOKIE]
