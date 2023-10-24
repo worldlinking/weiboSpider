@@ -8,6 +8,48 @@ from scrapy.utils.project import get_project_settings
 settings = get_project_settings()
 
 
+class TXTPipeline:
+    def open_spider(self, spider):
+        self.num = 0
+        self.separator = "\t"
+        print('初始化爬取数量num:', self.num)
+
+    def process_item(self, item, spider):
+        times = int(self.num / 100000)
+        file_path = item['keyword'] + '_' + str(times) + '.txt'
+        if item:
+            temp_data = dict(item)
+            data = {
+                "id": temp_data['_id'],
+                "bid": temp_data['mblogid'],
+                "user_id": temp_data['user']['_id'],
+                "screen_name": temp_data['user']['nick_name'],
+                "text": temp_data['content'],
+                "article_url": temp_data['url'],
+                "longitude": temp_data['geo']['coordinates'][1] if temp_data['geo'] else None,
+                "latitude": temp_data['geo']['coordinates'][0] if temp_data['geo'] else None,
+                "location": temp_data['ip_location'],
+                "reposts_count": temp_data['reposts_count'],
+                "comments_count": temp_data['comments_count'],
+                "attitudes_count": temp_data['attitudes_count'],
+                "created_at": temp_data['created_at'],
+                "pics": temp_data['pic_urls'],
+                "video_url": temp_data.get('video', None),
+                "task_id": temp_data['task_id']
+            }
+            data['pics'] = ','.join(data['pics'])
+            with open(file_path, 'a', encoding='utf-8') as f:
+                if self.num / 100000 == times:
+                    key_list = list(data.keys())
+                    header = self.separator.join('"'+str(value)+'"' for value in key_list)
+                    f.write(header + "\n")
+                values = self.separator.join('"'+str(value)+'"' for value in data.values())
+                f.write(values + "\n")
+            self.num += 1
+            print('爬取数量统计:', self.num)
+        return item
+
+
 class JsonWriterPipeline(object):
     """
     写入json文件的pipline

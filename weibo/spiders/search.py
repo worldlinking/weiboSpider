@@ -213,7 +213,7 @@ def parse_tweet_info(data):
         "_id": str(data['mid']),
         "mblogid": data['mblogid'],
         "created_at": parse_time(data['created_at']),
-        "geo": data['geo'],
+        "geo": data['geo'] if 'geo' in data else None,
         "ip_location": ip,
         "reposts_count": data['reposts_count'],
         "comments_count": data['comments_count'],

@@ -42,13 +42,14 @@ DOWNLOADER_MIDDLEWARES = {
     'weibo.middlewares.IPProxyMiddleware': 100,
     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 101,
     'weibo.middlewares.UserAgentMiddleware': 543,
-    # 'weibo.middlewares.CookiesMiddleware': 743,
-    'weibo.middlewares.RandomCookiesMiddleware': 743,
+    'weibo.middlewares.CookiesMiddleware': 743,
+    # 'weibo.middlewares.RandomCookiesMiddleware': 743,
 }
 
 ITEM_PIPELINES = {
-    # 'weibo.pipelines.JsonWriterPipeline': 300,
-    'weibo.pipelines.MysqlPipeline': 302,
+    'weibo.pipelines.JsonWriterPipeline': 300,
+    # 'weibo.pipelines.MysqlPipeline': 302,
+    # 'weibo.pipelines.TXTPipeline': 301,
     # 'weibo.pipelines.PostgresPipeline': 302,
 }
 

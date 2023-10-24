@@ -4,6 +4,7 @@ from scrapy.utils.project import get_project_settings
 
 settings = get_project_settings()
 
+
 # 随机请求头
 class UserAgentMiddleware(object):
     def __init__(self):
@@ -33,18 +34,19 @@ class UserAgentMiddleware(object):
         request.headers['User-Agent'] = user_agent
 
 
-# class CookiesMiddleware(object):
-#     def __init__(self):
-#         # with open('cookie.txt', 'rt', encoding='utf-8') as f:
-#         #     # cookie = f.read().strip()
-#         #     COOKIE = f.readlines()
-#         #     print(COOKIE,'-------------')
-#         COOKIE =['SINAGLOBAL=7523941191849.18.1671524378502; UOR=,,www.baidu.com; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9Whzc-BTq6b2gRBRbwkRngrT5JpX5KMhUgL.FoqE1K57S0.ce052dJLoIEXLxK-LBo.LBonLxKnLB.qL1K5LxK-L1h5LB.eLxK-L122LBK5LxK-L1h5L12Bt; WBPSESS=C_JZZ7l7hu7Xlt1vVNzqgqPCWRfjBFQQS0Xp_0Zv7_FMHQ8ZPHKAvVskpR56oIZz42cXaFzy2LLToEeh7Du1nZTGDk8_p1Q_JRdRgVk5J27IW81X2gyG1juHc1CbilBb1ZCRxEXi0FSo9rQ6zgvoTA==; ULV=1676624563294:21:6:2:8416613022324.19.1676624563253:1676377502646; XSRF-TOKEN=qt0q5B84-jNdBsPLaIPiFX51; ALF=1679241732; SSOLoginState=1676649733; SCF=ApiOVl_yCBuK6LOPfQPOUhVy9bg3SGyENywZ4fRZZK0nIJNePnqpHIlAqwQCdrz7yAmHi97KkPCRZLD7PKYwND4.; SUB=_2A25O69VVDeRhGeBM4lIR9yfKyDyIHXVtgUGdrDV8PUNbmtAGLRjjkW9NRKKCJxztayLUXIk2rGZiEKIXfsqrnsX4']
-#         self.COOKIE_LIST = [d.strip() for d in COOKIE]
-#
-#     def process_request(self, request, spider):
-#         cookie=self.COOKIE_LIST[0]
-#         request.headers['Cookie'] = cookie
+class CookiesMiddleware(object):
+    def __init__(self):
+        import os
+        current_path = os.getcwd()
+        with open(current_path + '\cookie.txt', 'rt', encoding='utf-8') as f:
+            COOKIE = f.readlines()
+            print(COOKIE, '-------------')
+        self.COOKIE_LIST = [d.strip() for d in COOKIE]
+
+    def process_request(self, request, spider):
+        cookie = self.COOKIE_LIST[0]
+        request.headers['Cookie'] = cookie
+
 
 # 设置随机cookie
 class RandomCookiesMiddleware(object):
@@ -55,7 +57,7 @@ class RandomCookiesMiddleware(object):
             'port': settings.get('MYSQL_PORT', 3306),
             'user': settings.get('MYSQL_USER', 'root'),
             'password': settings.get('MYSQL_PASSWORD', '123456'),
-            'db':settings.get('MYSQL_DATABASE', 'weibo'),
+            'db': settings.get('MYSQL_DATABASE', 'weibo'),
             'charset': 'utf8mb4'
         }
         self.db = pymysql.connect(**mysql_config)
@@ -70,6 +72,7 @@ class RandomCookiesMiddleware(object):
         cookie = random.choice(self.COOKIE_LIST)
         # cookie=self.COOKIE_LIST[0]
         request.headers['Cookie'] = cookie
+
 
 class IPProxyMiddleware(object):
     """
